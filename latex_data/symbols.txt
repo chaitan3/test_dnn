@@ -1,0 +1,13 @@
+\int
+\sim
+\approx
+\tilde
+\hat
+\bar
+\nabla
+\phi
+\omega
+\beta
+\alpha
+\gamma
+\delta

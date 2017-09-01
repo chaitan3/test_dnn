@@ -4,7 +4,7 @@ import subprocess
 import numpy as np
 import matplotlib.pyplot as plt
 
-data_dir = 'latex/'
+data_dir = 'latex_data/'
 
 def get_symbols():
     with open(data_dir + 'symbols.txt') as f:
@@ -12,7 +12,7 @@ def get_symbols():
 
 def gen_images(symbols):
     for index, symbol in enumerate(symbols):
-        print symbol
+        print index, symbol
         cmd = 'l2p -i \'{}\' -o {}image_{}.png'.format(symbol, data_dir, index)
         subprocess.check_call(cmd, shell=True)
 
