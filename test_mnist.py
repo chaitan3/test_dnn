@@ -53,7 +53,6 @@ def mnist_multi_layer():
     b = bias([10])
     y = tf.matmul(h, W) + b
 
-
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
     train_step = tf.train.AdamOptimizer(1e-4).minimize(loss)
     pred = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
