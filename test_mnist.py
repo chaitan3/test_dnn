@@ -59,6 +59,7 @@ def mnist_multi_layer():
     acc = tf.reduce_mean(tf.cast(pred, tf.float32))
 
     sess.run(tf.global_variables_initializer())
+    #print len(mnist.test.labels), len(mnist.train.labels)
 
     for i in range(1000):
         print i
