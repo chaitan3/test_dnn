@@ -2,14 +2,18 @@
 
 from gen_latex import get_data
 
-data = get_data()
+train_data, test_data = get_data()
 
 import tensorflow as tf
 
 sess = tf.Session()
 
-x = tf.placeholder(tf.float32, shape=[None, 784])
-y_ = tf.placeholder(tf.float32, shape=[None, 10])
+n_symbols = 71
+n_train = len(train_data[1])
+n_test = len(test_data[1])
+x = tf.placeholder(tf.float32, shape=[None, 28, 28])
+y_ = tf.placeholder(tf.float32, shape=[None, n_symbols])
+
 
 def multi_layer():
     def weights(shape):
@@ -33,8 +37,8 @@ def multi_layer():
     h = tf.reshape(h, [-1, 7*7*64])
     h = tf.nn.relu(tf.matmul(h, W) + b)
 
-    W = weights([1024, 10])
-    b = bias([10])
+    W = weights([1024, n_symbols])
+    b = bias([n_symbols])
     y = tf.matmul(h, W) + b
 
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
@@ -43,14 +47,16 @@ def multi_layer():
     acc = tf.reduce_mean(tf.cast(pred, tf.float32))
 
     sess.run(tf.global_variables_initializer())
-    #print len(mnist.test.labels), len(mnist.train.labels)
 
-    for i in range(1000):
-        print i
-        batch = mnist.train.next_batch(100)
+    for i in range(10000):
+        #print i
+        start = i*100 % (n_train - n_train % 100)
+        end = start + 100
+        batch = train_data[0][start:end], train_data[1][start:end]
         sess.run(train_step, feed_dict={x: batch[0], y_: batch[1]})
         if i % 100 == 0:
-            print sess.run(acc, feed_dict={x: mnist.test.images, y_: mnist.test.labels})
+            batch = test_data
+            print sess.run(acc, feed_dict={x: batch[0], y_: batch[1]})
 
 if __name__ == "__main__":
     multi_layer()

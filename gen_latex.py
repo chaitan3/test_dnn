@@ -15,7 +15,7 @@ def get_symbols():
 
 def gen_images(symbols):
     for index, symbol in enumerate(symbols):
-        print index, symbol
+        print(index, symbol)
         cmd = 'l2p -i \'{}\' -o {}image_{}.png'.format(symbol, data_dir, index)
         subprocess.check_call(cmd, shell=True)
 
@@ -25,7 +25,7 @@ def gen_processed_images(symbols, images):
         for symbol, image in zip(symbols, images):
             _index = [index]
             def write_image(data):
-                print _index[0], symbol
+                print(_index[0], symbol)
                 io.imsave('{}image_{}.png'.format(data_dir, _index[0]), data)
                 f.write(symbol + '\n')
                 _index[0] += 1
@@ -61,14 +61,27 @@ def get_images(symbols):
         data.append(io.imread(data_dir + 'image_{}.png'.format(index)))
     return data
 
-def get_data():
-    symbols = get_processed_symbols()
-    images = get_images(symbols)
+def get_labels_from_symbols(symbols, processed_symbols):
     n = len(symbols)
+    I = np.eye(n)
+    labels = []
+    for symbol in processed_symbols:
+        labels.append(I[symbols.index(symbol)])
+    return labels
+
+def get_data():
+    symbols = get_symbols()
+    processed_symbols = get_processed_symbols()
+    labels = get_labels_from_symbols(symbols, processed_symbols)
+    images = get_images(processed_symbols)
+    n = len(processed_symbols)
     test = set(random.sample(range(n), n/5))
     train = set(range(0, n))-test
     def get_subset_data(subset):
-        return [symbols[x] for x in subset], [images[x] for x in subset]
+        print max(subset), min(subset), n
+        #return [images[x] for x in subset], [labels[x] for x in subset]
+        return [transform.resize(images[x], (28,28)) for x in subset], [labels[x] for x in subset]
+    print len(images), len(labels)
     train_data = get_subset_data(train)
     test_data = get_subset_data(test)
     return train_data, test_data
