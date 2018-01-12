@@ -75,7 +75,7 @@ def get_data():
     labels = get_labels_from_symbols(symbols, processed_symbols)
     images = get_images(processed_symbols)
     n = len(processed_symbols)
-    test = set(random.sample(range(n), n/5))
+    test = set(random.sample(range(n), n/8))
     train = set(range(0, n))-test
     def get_subset_data(subset):
         print max(subset), min(subset), n

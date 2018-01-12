@@ -13,7 +13,7 @@ n_train = len(train_data[1])
 n_test = len(test_data[1])
 x = tf.placeholder(tf.float32, shape=[None, 28, 28])
 y_ = tf.placeholder(tf.float32, shape=[None, n_symbols])
-
+keep_prob = tf.placeholder(tf.float32)
 
 def multi_layer():
     def weights(shape):
@@ -22,9 +22,12 @@ def multi_layer():
         return tf.Variable(tf.constant(0.1, shape=shape))
 
     xi = tf.reshape(x, [-1, 28, 28, 1])
-    W = weights([3, 3, 1, 32])
-    b = bias([32])
+    W = weights([3, 3, 1, 64])
+    b = bias([64])
     h = tf.nn.relu(tf.nn.conv2d(xi, W, strides=[1,1,1,1], padding='SAME') + b)
+    W = weights([3, 3, 64, 32])
+    b = bias([32])
+    h = tf.nn.relu(tf.nn.conv2d(h, W, strides=[1,1,1,1], padding='SAME') + b)
     h = tf.nn.max_pool(h, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 
     W = weights([5, 5, 32, 64])
@@ -37,6 +40,7 @@ def multi_layer():
     h = tf.reshape(h, [-1, 7*7*64])
     h = tf.nn.relu(tf.matmul(h, W) + b)
 
+    h = tf.nn.dropout(h, keep_prob)
     W = weights([1024, n_symbols])
     b = bias([n_symbols])
     y = tf.matmul(h, W) + b
@@ -53,10 +57,13 @@ def multi_layer():
         start = i*100 % (n_train - n_train % 100)
         end = start + 100
         batch = train_data[0][start:end], train_data[1][start:end]
-        sess.run(train_step, feed_dict={x: batch[0], y_: batch[1]})
+        sess.run(train_step, feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
         if i % 100 == 0:
+            #import pdb;pdb.set_trace()
             batch = test_data
-            print sess.run(acc, feed_dict={x: batch[0], y_: batch[1]})
+            print 'test', sess.run(acc, feed_dict={x: batch[0], y_: batch[1], keep_prob: 1.0})
+            batch = train_data
+            print 'train', sess.run(acc, feed_dict={x: batch[0], y_: batch[1], keep_prob: 1.0})
 
 if __name__ == "__main__":
     multi_layer()
