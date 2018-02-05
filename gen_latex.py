@@ -75,13 +75,13 @@ def get_data():
     labels = get_labels_from_symbols(symbols, processed_symbols)
     images = get_images(processed_symbols)
     n = len(processed_symbols)
-    test = set(random.sample(range(n), n/8))
+    test = set(random.sample(range(n), n//8))
     train = set(range(0, n))-test
     def get_subset_data(subset):
-        print max(subset), min(subset), n
+        print(max(subset), min(subset), n)
         #return [images[x] for x in subset], [labels[x] for x in subset]
         return [transform.resize(images[x], (28,28)) for x in subset], [labels[x] for x in subset]
-    print len(images), len(labels)
+    print(len(images), len(labels))
     train_data = get_subset_data(train)
     test_data = get_subset_data(test)
     return train_data, test_data

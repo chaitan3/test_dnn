@@ -20,12 +20,12 @@ def mnist_single_layer():
     train_step = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
 
     for i in range(1000):
-        print i
+        print(i)
         batch = mnist.train.next_batch(100)
         sess.run(train_step, feed_dict={x: batch[0], y_: batch[1]})
     pred = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
     acc = tf.reduce_mean(tf.cast(pred, tf.float32))
-    print sess.run(acc, feed_dict={x: mnist.test.images, y_: mnist.test.labels})
+    print(sess.run(acc, feed_dict={x: mnist.test.images, y_: mnist.test.labels}))
 
 def mnist_multi_layer():
     def weights(shape):
@@ -62,11 +62,11 @@ def mnist_multi_layer():
     #print len(mnist.test.labels), len(mnist.train.labels)
 
     for i in range(1000):
-        print i
+        print(i)
         batch = mnist.train.next_batch(100)
         sess.run(train_step, feed_dict={x: batch[0], y_: batch[1]})
         if i % 100 == 0:
-            print sess.run(acc, feed_dict={x: mnist.test.images, y_: mnist.test.labels})
+            print(sess.run(acc, feed_dict={x: mnist.test.images, y_: mnist.test.labels}))
 
 if __name__ == "__main__":
     mnist_multi_layer()

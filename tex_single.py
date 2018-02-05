@@ -61,9 +61,9 @@ def multi_layer():
         if i % 100 == 0:
             #import pdb;pdb.set_trace()
             batch = test_data
-            print 'test', sess.run(acc, feed_dict={x: batch[0], y_: batch[1], keep_prob: 1.0})
+            print('test', sess.run(acc, feed_dict={x: batch[0], y_: batch[1], keep_prob: 1.0}))
             batch = train_data
-            print 'train', sess.run(acc, feed_dict={x: batch[0], y_: batch[1], keep_prob: 1.0})
+            print('train', sess.run(acc, feed_dict={x: batch[0], y_: batch[1], keep_prob: 1.0}))
 
 if __name__ == "__main__":
     multi_layer()
